@@ -3,25 +3,33 @@ import { LoginStyle } from '../Styles/Views/Login';
 import Logo from '../../assets/images/mark.png'
 import { useState } from 'react';
 import { checkEmail, checkPassword } from '../Utils/Regex';
+import { login } from '../Services/Login';
 
 
 
-export const Login = () => {
+export const Login = ({navigation}) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [emailError, setEmailError] = useState(false)
-    const [passwordError, setPasswordError] = useState(false)
+    const [emailError, setEmailError] = useState("")
+    const [passwordError, setPasswordError] = useState("")
 
     function handleLogin() {
-        setEmail('')
-        setPassword('')
+        setEmailError('')
+        setPasswordError('')
         if (checkEmail(email) === false) {
             setEmailError("Incorrect email format")
         }
         else if (checkPassword(password) === false) {
             setPasswordError("Incorrect password format, 1 upper, 1 lower, 1 digit required")
         } else{
-            Alert.alert("Login successful")
+            login(email,password).then((res) => {
+                if (res === 200) {
+                    navigation.navigate('Home')
+
+                } else {
+                    Alert.alert("Invalid credentials")
+                }
+            })
     }
 
     }
